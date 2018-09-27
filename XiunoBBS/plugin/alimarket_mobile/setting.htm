@@ -1,0 +1,131 @@
+<?php include _include(ADMIN_PATH.'view/htm/header.inc.htm');?>
+
+<div class="row">
+	<div class="col-lg-10 mx-auto">
+		<div class="card">
+			<div class="card-body">
+				<form action="<?php echo url("plugin-setting-alimarket_mobile");?>" method="post" id="form">
+					<h4 class="card-title">设置</h4>
+					<div class="form-group row">
+						<label class="col-4 form-control-label">是否开启手机号注册：</label>
+						<div class="col-8">
+							<?php echo $input['user_create_on']; ?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4 form-control-label">是否开启手机重置密码：</label>
+						<div class="col-8">
+							<?php echo $input['user_resetpw_on']; ?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4 form-control-label">登陆方式：</label>
+						<div class="col-8">
+							<select name="login_type" class="custom-select">
+								<option value="1"><?php echo lang('login_type_1');?></option>
+								<option value="2"><?php echo lang('login_type_2');?></option>
+								<option value="3"><?php echo lang('login_type_3');?></option>
+								<option value="4"><?php echo lang('login_type_4');?></option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4 form-control-label">开启绑定手机号：</label>
+						<div class="col-8">
+							<?php echo $input['bind_on']; ?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4 form-control-label">强制绑定手机才能发帖：</label>
+						<div class="col-8">
+							<?php echo $input['force_post_bind_on']; ?>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4 form-control-label">强制绑定手机帖子才能显示：</label>
+						<div class="col-8">
+							<?php echo $input['force_view_bind_on']; ?>
+						</div>
+					</div>
+					<div id="yunsms" class="send_plat_div">
+						<div class="form-group row">
+							<label class="col-4 form-control-label">阿里云AppKey：</label>
+							<div class="col-8">
+								<?php echo $input['alimarket_api_appkey']; ?>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-4 form-control-label">阿里云AppSecret：</label>
+							<div class="col-8">
+								<?php echo $input['alimarket_api_appsecret']; ?>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label class="col-4 form-control-label">短信模板内容：</label>
+							<div class="col-8">
+								<?php echo $input['alimarket_api_template']; ?>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label class="col-4 form-control-label"></label>
+						<div class="col-8">
+							<button type="submit" class="btn btn-primary btn-block" id="submit" data-loading-text="<?php echo lang('submiting');?>..."><?php echo lang('confirm');?></button>
+							<a role="button" class="btn btn-secondary btn-block mt-3" href="javascript:history.back();"><?php echo lang('back');?></a>
+						</div>
+					</div>
+				</form>
+				<p class="my-3 small">注：如您需发送正式内容，请加QQ：320266360发送短信模板内容报备（加QQ备注订单编号，在云市场-订单列表中查看，否则不予通过）。模板内容变量不用管只需修改中文部分，发送需要报备内容到QQ即可。短信内容请不要包含特殊字符，短信内容字数不能超过70字（包含签名），标点符号、数字、中英字符都算一个字数。短信签名3-10个字数，签名可以是公司名、产品名、网站名、系统名等，特殊签名需要提供相关授权证明。</p>
+				<p class="my-3 small">注：提示API调用失败：403 表示阿里云市场短信接口API购买的次数已用完。需要再次购买短信套餐包次数，阿里云市场API接口返回错误详细信息请看：<a href="https://help.aliyun.com/document_detail/43906.html" target="_blank">错误代码表</a></p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php include _include(ADMIN_PATH.'view/htm/footer.inc.htm');?>
+
+<script>
+var jform = $("#form");
+var jsubmit = $("#submit");
+var referer = '<?php echo http_referer();?>';
+jform.on('submit', function(){
+	jform.reset();
+	jsubmit.button('loading');
+	var postdata = jform.serialize();
+	$.xpost(jform.attr('action'), postdata, function(code, message) {
+		if(code == 0) {
+			$.alert(message);
+			jsubmit.text(message).delay(2000).button('reset').location();
+			return;
+		} else {
+			$.alert(message);
+			jsubmit.button('reset');
+		}
+	});
+	return false;
+});
+
+jform.find('select[name="login_type"]').val('<?php echo $kv['login_type'];?>');
+jform.find('select[name="alimarket_api_method"]').val('<?php echo $kv['alimarket_api_method'];?>');
+
+
+var jsend_plat = jform.find('select[name="send_plat"]');
+jsend_plat.val('<?php echo $kv['send_plat'];?>');
+$('#<?php echo $kv['send_plat'];?>').removeClass('d-none');
+jsend_plat.on('change', function() {
+	var jthis = $(this);
+	var v = jthis.val();
+	if(!v) return;
+	$('div.send_plat_div').addClass('d-none');
+	$('#'+v).removeClass('d-none');
+});
+function smsnumber()
+{
+$.get("/admin/plugin-setting-alimarket_mobile.htm?smsnumber=1", {time: Math.random() },
+function(data){
+      $('#snumber').text(data);
+     }  
+ );  
+}
+smsnumber();
+</script>

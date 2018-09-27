@@ -1,0 +1,13 @@
+{
+    "name": "手机短信验证-阿里云市场专版",
+    "brief": "手机短信验证实现登陆、注册、找回密码等功能。<br>默认使用接口：<a href='https://market.aliyun.com/products/57126001/cmapi030182.html' target='_blank'>阿里云市场短信接口价格全网最低</a><br><a href='https://market.aliyun.com/products/?keywords=%E7%9F%AD%E4%BF%A1%E6%8E%A5%E5%8F%A3' target='_blank'>支持阿里云市场里所有短信接口不好用随时换接口</a><br>技术支持QQ：320266360 QQ交流群：216138200",
+    "version": "1.0",
+    "bbs_version": "4.0.4",
+    "author": "alimarket",
+    "id": "alimarket_mobile",
+    "installed": 1,
+    "enable": 1,
+    "hooks_rank": [],
+    "overwrites_rank": [],
+    "dependencies": []
+}

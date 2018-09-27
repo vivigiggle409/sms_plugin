@@ -1,0 +1,616 @@
+{eval
+function tpl_register_input_output() {
+global $_G;
+
+$periodofvalidity = $_G['cache']['plugin']['smstong']['periodofvalidity'];
+$periodofvalidity = empty($periodofvalidity)?0:$periodofvalidity;
+
+$verifycodes = DB::fetch_first("SELECT mobile,getip,dateline FROM ".DB::table('common_verifycode')." WHERE getip='$_G[clientip]' AND status=1 AND dateline>'$_G[timestamp]'-$periodofvalidity order by id desc");
+
+$regsendtime = intval($verifycodes['dateline']);
+$mobilegap = intval($_G['cache']['plugin']['smstong']['mobilegap']);
+$interval = time() - $regsendtime;
+$lastsecond = $mobilegap - $interval;
+
+$sendedmobile = substr($verifycodes['mobile'], 0, 4).'****'.substr($verifycodes['mobile'], 8, 3);
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+require_once libfile('function/misc');
+$iparea = trim(trim(convertip($_G['clientip']),'-'));
+$flag = $_G['cache']['plugin']['smstong']['nonlocalcheck']?strstr($_G['cache']['plugin']['smstong']['areavalue'], $iparea)?true:false:false;
+
+require_once DISCUZ_ROOT.'./source/discuz_version.php';
+
+}
+<!--{block return}-->
+<!--{if !$_G[setting][sendregisterurl] || !empty($_GET[hash]) }-->
+	<!--{if $_G['cache']['plugin']['smstong']['mobilereg'] && !$flag}-->
+
+	<!--{if $_G['cache']['plugin']['smstong']['openverifycode']}-->
+	<!--{if (DISCUZ_VERSION == 'X1.5' || DISCUZ_VERSION == 'X2' || DISCUZ_VERSION == 'X2.5' || DISCUZ_VERSION == 'X3')}-->
+	<div class="rfm">
+		<table>
+			<tr>
+				<th><span class="rq">*</span><label for="">{lang seccode}:</label></th>
+				<td><input name="seccodeverify" id="seccodeverify_$sechash" type="text" autocomplete="off" style="width:100px" class="txt px vm" onblur="checksec('code', '$sechash')" tabindex="1" required />
+				<a href="javascript:;" onclick="updateseccode('$sechash');doane(event);" class="xi2">{lang seccode_change}</a>
+				<span id="checkseccodeverify_$sechash"><img src="{STATICURL}image/common/none.gif" width="16" height="16" class="vm" /></span><br />
+				<span id="seccode_$sechash" style="padding:5px;"></span>
+				<script type="text/javascript" reload="1">updateseccode('$sechash');</script></td>
+				</tr>
+		</table>
+	</div>
+	<!--{else}-->
+		<span id="seccode_c$sechash"></span>		
+		<script type="text/javascript" reload="1">updateseccode('c$sechash', '<div class="rfm"><table><tr><th><span class="rq">*</span><sec>: </th><td><sec><br /><sec></td></tr></table></div>', '');</script>
+	<!--{/if}-->
+	<!--{/if}-->
+
+	<div class="rfm">
+		<table id="myphone">
+			<tr>
+				<th><span class="rq"><!--{if !$_G['cache']['plugin']['smstong']['voluntaryverifyreg']}-->*<!--{/if}--></span><label for="msm4Zg">{lang smstong:smstong_mobilereg_mobile}:</label></th>
+				<td><input type="text" id="mobile" name="mobile" <!--{if ($verifycodes[getip] == $_G[clientip]) && ($interval <= $mobilegap)}-->value=""<!--{/if}--> onblur="checkmobile();" class="px" tabindex="1" autocomplete="off" size="25" <!--{if $_G['cache']['plugin']['smstong']['sendtype'] == '6'}-->
+				maxlength="13"
+				<!--{elseif $_G['cache']['plugin']['smstong']['sendtype'] == '7'}-->
+				maxlength="13"
+				<!--{else}-->
+				maxlength="11"
+				<!--{/if}--> <!--{if !$_G['cache']['plugin']['smstong']['voluntaryverifyreg']}-->required<!--{/if}--> /></td>
+				<td class="tipcol"><i id="tip_mobile" class="p_tip">
+				<!--{if $_G['cache']['plugin']['smstong']['sendtype'] == '6'}-->
+				{lang smstong:smstong_mobilereg_mobile_tip1}
+				<!--{elseif $_G['cache']['plugin']['smstong']['sendtype'] == '7'}-->
+				{lang smstong:smstong_mobilereg_mobile_tip1}
+				<!--{else}-->
+				{lang smstong:smstong_mobilereg_mobile_tip}
+				<!--{/if}-->
+				</i><kbd id="chk_mobile" class="p_chk"></kbd></td>
+			</tr>
+			
+		</table>
+	</div>
+
+	<div class="rfm">
+		<table id="myauth">
+			<tr>
+				<th><span class="rq"><!--{if !$_G['cache']['plugin']['smstong']['voluntaryverifyreg']}-->*<!--{/if}--></span><label for="">{lang smstong:smstong_mobilebind_verifycode}:</label></th>
+				<td><input type="text" id="verifycode" name="verifycode" onblur="checkregverifycode();" class="px" tabindex="1" autocomplete="off" size="25" maxlength="6" <!--{if !$_G['cache']['plugin']['smstong']['voluntaryverifyreg']}-->required<!--{/if}--> /></td>
+				<td class="tipcol"><i id="tip_verifycode" class="p_tip">{lang smstong:smstong_mobilereg_verifycode_tip}</i><kbd id="chk_verifycode" class="p_chk"></kbd></td>
+			</tr>
+			<tr>
+				<th></th>
+				<td><button id="btn_getregverifycode" class="pn" type="button" onclick="getregverifycode();" style="width:100%">{$_G['cache']['plugin']['smstong']['getverifycodetext']}</button><p><font color="red"> {lang smstong:smstong_mobilereg_verifycode_desc}</font></p></td>
+				<td class="tipcol"></td>
+			</tr>
+		</table>
+	</div>
+	
+	<!--{if $_G['cache']['plugin']['smstong']['openregnotify']}-->
+	<div class="rfm">
+		<table>
+			<tr>
+				<th></th>
+				<td><font color="red">$_G['cache']['plugin']['smstong']['openregnotifymsg']</font></td>
+			</tr>
+		</table>
+	</div>
+	<!--{/if}-->
+
+
+	<script type="text/javascript">
+	var lastmobile = '', lastverifycode = '';
+	var intval	= null;
+
+	<!--{if ($verifycodes[getip] == $_G[clientip]) && ($interval <= $mobilegap)}-->
+		var timeRemain = parseInt('$lastsecond');
+		var waitTime = parseInt('$lastsecond');
+	<!--{else}-->
+		var timeRemain = parseInt('$_G["cache"]["plugin"]["smstong"]["mobilegap"]');
+		var waitTime = parseInt('$_G["cache"]["plugin"]["smstong"]["mobilegap"]');
+	<!--{/if}-->
+
+	function checkmobile() {
+		errormessage('mobile');
+		var sechashcode = '';
+		<!--{if (DISCUZ_VERSION == 'X1.5' || DISCUZ_VERSION == 'X2' || DISCUZ_VERSION == 'X2.5' || DISCUZ_VERSION == 'X3')}-->
+		var sechash = $('seccodeverify_$sechash');
+		<!--{else}-->
+		var sechash = $('seccodeverify_c$sechash');
+		<!--{/if}-->
+		if(sechash) {
+			sechashcode = sechash.value;
+		}
+
+		var mobile = trim($('mobile').value);
+		
+		if(mobile.match(/<|"/ig)) {
+			errormessage('mobile', '{lang smstong:smstong_mobilereg_mobile_error_tip}');
+			return;
+		}
+		var x = new Ajax();
+		$('tip_mobile').parentNode.className = $('tip_mobile').parentNode.className.replace(/ p_right/, '');
+		x.get('plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&seccodeverify='+escape(sechashcode)+'&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checkmobile&mobile=' + mobile + '&' + Math.random(),
+		function(s) {
+			errormessage('mobile', s);
+		});
+	}
+
+	function getregverifycode() {
+		<!--{if !empty($_GET[action]) }-->
+		
+		<!--{elseif !empty($_GET[email]) }-->
+		var username = trim($('{$_G[setting][reginput][username]}').value);
+		var password = trim($('{$_G[setting][reginput][password]}').value);
+		var password2 = trim($('{$_G[setting][reginput][password2]}').value);
+		<!--{else}-->
+		var username = trim($('{$_G[setting][reginput][username]}').value);
+		var password = trim($('{$_G[setting][reginput][password]}').value);
+		var password2 = trim($('{$_G[setting][reginput][password2]}').value);
+		<!--{/if}-->
+		var mobile = trim($('mobile').value);
+		
+		<!--{if empty($_GET[action])}-->
+		if(username == '') {
+			errormessage('{$_G[setting][reginput][username]}', '{lang smstong:smstong_register_username_tips}');return;
+		} else if(password == '') {
+			errormessage('{$_G[setting][reginput][password]}', '{lang smstong:smstong_register_password_tips}');return;
+		} else if(password2 == '') {
+			errormessage('{$_G[setting][reginput][password2]}', '{lang smstong:smstong_register_repassword_tips}');return;
+		}
+		<!--{/if}-->
+
+		if(mobile == '') {
+			errormessage('mobile', '{lang smstong:smstong_mobilereg_mobile_empty}');
+		} else {
+
+			var sechashcode = '';
+			<!--{if (DISCUZ_VERSION == 'X1.5' || DISCUZ_VERSION == 'X2' || DISCUZ_VERSION == 'X2.5' || DISCUZ_VERSION == 'X3')}-->
+			var sechash = $('seccodeverify_$sechash');
+			<!--{else}-->
+			var sechash = $('seccodeverify_c$sechash');
+			<!--{/if}-->
+			if(sechash) {
+				sechashcode = sechash.value;
+			}
+
+			var x = new Ajax();
+			$('tip_mobile').parentNode.className = $('tip_mobile').parentNode.className.replace(/ p_right/, '');
+			$('btn_getregverifycode').disabled = true;
+			x.get('plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&seccodeverify='+escape(sechashcode)+'&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=getregverifycode&mobile=' + mobile + '&' + Math.random(), function(s) {
+				if (s.indexOf('{lang smstong:smstong_mobilereg_sendsms_succeed}') != -1)
+					{
+						if(intval == null) intval = setInterval(setchecktime,1000);
+					} else {
+						if ($('myphone').style.display == '')
+						{
+							errormessage('mobile', s);
+						} else {
+							errormessage('verifycode', s);
+						}
+				}
+
+				$('btn_getregverifycode').disabled = false;
+			});
+		}
+	}
+
+	function checkregverifycode() {
+		errormessage('verifycode');
+		var sechashcode = '';
+		<!--{if (DISCUZ_VERSION == 'X1.5' || DISCUZ_VERSION == 'X2' || DISCUZ_VERSION == 'X2.5' || DISCUZ_VERSION == 'X3')}-->
+		var sechash = $('seccodeverify_$sechash');
+		<!--{else}-->
+		var sechash = $('seccodeverify_c$sechash');
+		<!--{/if}-->
+		if(sechash) {
+			sechashcode = sechash.value;
+		}
+
+		var mobile = trim($('mobile').value);
+
+		if(mobile == '') {
+			errormessage('mobile', '{lang smstong:smstong_mobilereg_mobile_empty}');
+			return;
+		}
+
+		var verifycode = trim($('verifycode').value);
+		if(verifycode == '' || verifycode == lastverifycode) {
+			return;
+		} else {
+			lastverifycode = verifycode;
+		}
+		
+		if(verifycode.match(/<|"/ig)) {
+			errormessage('verifycode', '{lang smstong:smstong_mobilereg_verifycode_error_tip}');
+			return;
+		}
+		var x = new Ajax();
+		$('tip_verifycode').parentNode.className = $('tip_verifycode').parentNode.className.replace(/ p_right/, '');
+		x.get('plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&seccodeverify='+escape(sechashcode)+'&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=checkregverifycode&verifycode=' + verifycode + '&mobile=' + mobile + '&' + Math.random(), function(s) {
+			errormessage('verifycode', s);
+		});
+	}
+
+	function setchecktime() {
+		timeRemain -= 1;
+		if (timeRemain > 0) {
+			if ($('btn_getregverifycode')) $("btn_getregverifycode").disabled = true;
+
+			if ($('btn_getregverifycode')) $("btn_getregverifycode").innerHTML = '<strong><font color="red">'+timeRemain+'{lang smstong:smstong_mobilereg_checktime_second}</font>{lang smstong:smstong_mobilereg_checktime_after}</strong>';
+
+		} else {
+			clearInterval(intval);
+			intval = null;
+			timeRemain = waitTime;
+			$("btn_getregverifycode").disabled = false;
+			$("btn_getregverifycode").innerHTML = '<strong>{lang smstong:smstong_mobilereg_checktime_retry}</strong>';
+
+			$("btn_getregverifycode").onclick = function() {
+				if (timeRemain == waitTime || timeRemain == 0) {
+					getregvoicecode();
+				}
+			}
+		}
+	}
+
+	function getregvoicecode() {
+		<!--{if !empty($_GET[action]) }-->
+		
+		<!--{elseif !empty($_GET[email]) }-->
+		var username = trim($('{$_G[setting][reginput][username]}').value);
+		var password = trim($('{$_G[setting][reginput][password]}').value);
+		var password2 = trim($('{$_G[setting][reginput][password2]}').value);
+		<!--{else}-->
+		var username = trim($('{$_G[setting][reginput][username]}').value);
+		var password = trim($('{$_G[setting][reginput][password]}').value);
+		var password2 = trim($('{$_G[setting][reginput][password2]}').value);
+		<!--{/if}-->
+		var mobile = trim($('mobile').value);
+		
+		<!--{if empty($_GET[action])}-->
+		if(username == '') {
+			errormessage('{$_G[setting][reginput][username]}', '{lang smstong:smstong_register_username_tips}');return;
+		} else if(password == '') {
+			errormessage('{$_G[setting][reginput][password]}', '{lang smstong:smstong_register_password_tips}');return;
+		} else if(password2 == '') {
+			errormessage('{$_G[setting][reginput][password2]}', '{lang smstong:smstong_register_repassword_tips}');return;
+		}
+		<!--{/if}-->
+
+		if(mobile == '') {
+			errormessage('mobile', '{lang smstong:smstong_mobilereg_mobile_empty}');
+		} else {
+
+			var sechashcode = '';
+			<!--{if (DISCUZ_VERSION == 'X1.5' || DISCUZ_VERSION == 'X2' || DISCUZ_VERSION == 'X2.5' || DISCUZ_VERSION == 'X3')}-->
+			var sechash = $('seccodeverify_$sechash');
+			<!--{else}-->
+			var sechash = $('seccodeverify_c$sechash');
+			<!--{/if}-->
+			if(sechash) {
+				sechashcode = sechash.value;
+			}
+
+			var x = new Ajax();
+			$('tip_mobile').parentNode.className = $('tip_mobile').parentNode.className.replace(/ p_right/, '');
+			$('btn_getregverifycode').disabled = true;
+			x.get('plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&seccodeverify='+escape(sechashcode)+'&inajax=yes&infloat=register&handlekey=register&ajaxmenu=1&action=getregvoicecode&mobile=' + mobile + '&' + Math.random(), function(s) {
+				if (s.indexOf('{lang smstong:smstong_mobilereg_sendsms_succeed}') != -1)
+					{
+						if(intval == null) intval = setInterval(setchecktime,1000);
+					} else {
+						if ($('myphone').style.display == '')
+						{
+							errormessage('mobile', s);
+						} else {
+							errormessage('verifycode', s);
+						}
+				}
+
+				$('btn_getregverifycode').disabled = false;
+			});
+		}
+	}
+
+	</script>
+	<!--{/if}-->
+<!--{/if}-->
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_logging_input() {
+global $_G;
+}
+<!--{block return}-->
+	<!--{if $_G['cache']['plugin']['smstong']['mobilelog']}-->
+		<script type="text/javascript">
+			var select = document.getElementsByName("loginfield")[0];
+			if (select)
+			{
+				select.options.add(new Option('{lang smstong:smstong_mobilereg_mobile}','mobile'));
+			}
+		</script>
+	<!--{/if}-->
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_global_login_mobile_autoselect() {
+global $_G;
+}
+<!--{block return}-->
+	<!--{if $_G['cache']['plugin']['smstong']['mobilelog']}-->
+		<script type="text/javascript">
+			var select = document.getElementsByName("fastloginfield")[0];
+			if (select)
+			{
+				select.options.add(new Option('{lang smstong:smstong_mobilereg_mobile}','mobile'));
+			}
+		</script>
+	<!--{/if}-->
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_spacecp_profile_bottoms() {
+global $_G;
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+}
+<!--{block return}-->
+	<!--{if $_G['cache']['plugin']['smstong']['mobilebind']}-->
+		<script type="text/javascript">
+			var mobile = document.getElementsByName("mobile")[0];
+			if (mobile)
+			{
+				if (mobile.value == "")
+				{
+					$('td_mobile').innerHTML = '<input type="text" name="mobile" class="px" value="" readonly="readonly" tabindex="1" /> <a id="bindmobile" href="plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile=" onclick="showWindow(this.id, this.href, \'get\', 0);return false;"><font color="red"><b>{lang smstong:smstong_mobilebind_mobile_bind_button}</b></font></a><div class="rq mtn" id="showerror_mobile"></div><p class="d"></p>';
+				}
+				else
+				{
+					$('td_mobile').innerHTML = '<input type="text" name="mobile" class="px" value="'+mobile.value+'" readonly="readonly" tabindex="1" /> <a id="bindmobile" href="plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile='+mobile.value+'" onclick="showWindow(this.id, this.href, \'get\', 0);return false;"><font color="red"><b>{lang smstong:smstong_mobilebind_mobile_rebind_button}</b></font></a><div class="rq mtn" id="showerror_mobile"></div><p class="d"></p>';
+				}
+			}
+		</script>
+	<!--{/if}-->
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_index_bottom_output() {
+global $_G;
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+}
+<!--{block return}-->
+	<!--{if $_G['cache']['plugin']['smstong']['mobilebind']}-->
+		<script type="text/javascript">
+			showWindow('bindmobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile=', 'get', 0);
+		</script>
+	<!--{/if}-->
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_post_btn_extra_output() {
+global $_G;
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+$mobile = DB::result_first("SELECT mobile FROM ".DB::table('common_member_profile')." WHERE uid=$_G[uid]");
+
+}
+<!--{block return}-->
+	<script type="text/javascript" language="javascript">
+	if (document.getElementById("postsubmit")) {
+		var postsubmit = document.getElementById("postsubmit");
+		var p = postsubmit.parentNode;
+		var post = document.createElement("Button");
+		post.setAttribute("type", "button");
+		post.onclick = function () {
+	<!--{if $_G['cache']['plugin']['smstong']['sendbindmobile'] && empty($mobile)}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			showWindow('bindmobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile=', 'get', 0);
+			<!--{/if}-->
+	<!--{else}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			showWindow('verifymobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=post&mobile=$mobile', 'get', 0);
+			<!--{/if}-->
+	<!--{/if}-->
+		};
+		post.className = postsubmit.className;
+		post.style.width = postsubmit.style.width;
+		post.style.height = postsubmit.style.height;
+		postsubmit.style.display = "none";
+		post.innerHTML = postsubmit.innerHTML;
+		p.insertBefore(post, postsubmit);
+	}
+	</script>
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_forumdisplay_fastpost_btn_extra_output() {
+global $_G;
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+$mobile = DB::result_first("SELECT mobile FROM ".DB::table('common_member_profile')." WHERE uid=$_G[uid]");
+
+}
+<!--{block return}-->
+	<script type="text/javascript" language="javascript">
+	if (document.getElementById("fastpostsubmit")) {
+		var fastpostsubmit = document.getElementById("fastpostsubmit");
+		var p = fastpostsubmit.parentNode;
+		var post = document.createElement("Button");
+		post.setAttribute("type", "button");
+		post.onclick = function () {
+	<!--{if $_G['cache']['plugin']['smstong']['sendbindmobile'] && empty($mobile)}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			showWindow('bindmobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile=', 'get', 0);
+			<!--{/if}-->
+	<!--{else}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			var flag = fastpostvalidate(document.getElementById("fastpostform"), true);
+			if (flag)
+			{
+				showWindow('verifymobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=fastpost&mobile=$mobile', 'get', 0);
+			}
+			<!--{/if}-->
+	<!--{/if}-->
+		};
+		post.className = fastpostsubmit.className;
+		post.style.width = fastpostsubmit.style.width;
+		post.style.height = fastpostsubmit.style.height;
+		fastpostsubmit.style.display = "none";
+		post.innerHTML = fastpostsubmit.innerHTML;
+		p.insertBefore(post, fastpostsubmit);
+	}
+	</script>
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_post_infloat_btn_extra_output() {
+global $_G;
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+$mobile = DB::result_first("SELECT mobile FROM ".DB::table('common_member_profile')." WHERE uid=$_G[uid]");
+
+}
+<!--{block return}-->
+	<script type="text/javascript" language="javascript">
+	if (document.getElementById("postsubmit")) {
+		var postsubmit = document.getElementById("postsubmit");
+		var p = postsubmit.parentNode;
+		var post = document.createElement("Button");
+		post.setAttribute("type", "button");
+		post.onclick = function () {
+	<!--{if $_G['cache']['plugin']['smstong']['sendbindmobile'] && empty($mobile)}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			showWindow('bindmobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile=', 'get', 0);
+			<!--{/if}-->
+	<!--{else}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			showWindow('verifymobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=reply&mobile=$mobile', 'get', 0);
+			<!--{/if}-->
+	<!--{/if}-->
+		};
+		post.className = postsubmit.className;
+		post.style.width = postsubmit.style.width;
+		post.style.height = postsubmit.style.height;
+		postsubmit.style.display = "none";
+		post.innerHTML = postsubmit.innerHTML;
+		p.insertBefore(post, postsubmit);
+	}
+	</script>
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function tpl_viewthread_fastpost_content_output() {
+global $_G;
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+$mobile = DB::result_first("SELECT mobile FROM ".DB::table('common_member_profile')." WHERE uid=$_G[uid]");
+
+}
+<!--{block return}-->
+	<script type="text/javascript" language="javascript">
+	if (document.getElementById("vreplysubmit")) {
+		var fastpostsubmit = document.getElementById("vreplysubmit");
+		var p = fastpostsubmit.parentNode;
+		var post = document.createElement("Button");
+		post.setAttribute("type", "button");
+		post.onclick = function () {
+	<!--{if $_G['cache']['plugin']['smstong']['sendbindmobile'] && empty($mobile)}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			showWindow('bindmobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile=', 'get', 0);
+			<!--{/if}-->
+	<!--{else}-->
+			<!--{if !$_G['uid']}-->
+			showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);
+			<!--{else}-->
+			showWindow('verifymobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=vfastpost&mobile=$mobile', 'get', 0);
+			<!--{/if}-->
+	<!--{/if}-->
+		};
+		post.className = fastpostsubmit.className;
+		post.style.width = fastpostsubmit.style.width;
+		post.style.height = fastpostsubmit.style.height;
+		fastpostsubmit.style.display = "none";
+		post.innerHTML = fastpostsubmit.innerHTML;
+		p.insertBefore(post, fastpostsubmit);
+	}
+	</script>
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+function index_top_output() {
+global $_G;
+
+$_G['sechashi'] = !empty($_G['cookie']['sechashi']) ? $_G['sechash'] + 1 : 0;
+$sechash = 'S'.($_G['inajax'] ? 'A' : '').$_G['sid'].$_G['sechashi'];
+
+$mobile = DB::result_first("SELECT mobile FROM ".DB::table('common_member_profile')." WHERE uid=$_G[uid]");
+
+$content = $_G['cache']['plugin']['smstong']['customecontent'];
+$rp = array('$username');
+$sm = array($_G['username']);
+$content = str_replace($rp, $sm, $content);
+
+}
+<!--{block return}-->
+	<!--{if !$_G['uid']}-->
+			<a id="sendcustomecontent" title="$content" href="javascript:viod(0);" onclick="showWindow('login', 'member.php?mod=logging&action=login', 'get', 0);return false;"><font color="red"><b>$_G['cache']['plugin']['smstong']['customecontenttitle']</b></font></a>
+	<!--{elseif $_G['cache']['plugin']['smstong']['sendcustomecontent'] && empty($mobile)}-->
+			<a id="sendcustomecontent" title="$content" href="javascript:viod(0);" onclick="showWindow('bindmobile', 'plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=bindmobile&mobile=', 'get', 0);;return false;"><font color="red"><b>$_G['cache']['plugin']['smstong']['customecontenttitle']</b></font></a>
+	<!--{else}-->
+			<a id="sendcustomecontent" title="$content" href="plugin.php?id=smstong:verifycode&idhash=$sechash&formhash={FORMHASH}&action=sendcustomecontent" onclick="showWindow(this.id, this.href, 'get', 0);return false;"><font color="red"><b>$_G['cache']['plugin']['smstong']['customecontenttitle']</b></font></a>
+	<!--{/if}-->
+<!--{/block}-->
+<!--{eval return $return;}-->
+{eval
+}
+
+}
