@@ -2,7 +2,7 @@
 > 致力于收集，整理，开发和维护各类常见开源建站系统的短信功能，提供优质的短信接口，方便开发者和站长便于直接使用。欢迎有能力的开发者贡献各类开源系统短信插件。
 
 ## 支持以下开源系统
-> [Discuz!](http://www.discuz.net/forum-10-1.html) [ECShop](http://bbs.ecshop.com/viewthread.php?tid=195351&extra=&page=1) [XiunoBBS](http://bbs.xiuno.com/forum-2.htm) [骑士CMS](http://www.74cms.com/download/index.html) [Destoon B2B](https://www.destoon.com/download/index.html) 努力增加中...
+> [Discuz!](http://www.discuz.net/forum-10-1.html) [ECShop](http://bbs.ecshop.com/viewthread.php?tid=195351&extra=&page=1) [XiunoBBS](http://bbs.xiuno.com/forum-2.htm) [骑士CMS](http://www.74cms.com/download/index.html) [Destoon B2B](https://www.destoon.com/download/index.html) [Mymps蚂蚁分类信息](https://www.destoon.com/download/index.html) 努力增加中...
 
 ## 短信接口介绍
 > 所有插件使用的短信接口是阿里云市场的短信接口，因为阿里云官方短信模板审核以及设置比较麻烦。所以专门开发对接阿里云市场里面的短信接口，阿里云市场里面的短信接口相较于阿里云官方短信接口有着接口简单，对接方便，审核快速，价格便宜等优点。
