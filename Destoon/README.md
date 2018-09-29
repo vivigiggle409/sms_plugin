@@ -27,12 +27,12 @@ https://market.console.aliyun.com/#/bizlist
 
 ## 五、点击保存提交参数设置：
 
-![点击保存提交参数设置](http://bbs.xiuno.com/upload/tmp/20361_TDDTZ5A3PUEE44Y.png "点击保存提交参数设置")
+![点击保存提交参数设置](http://bbs.xiuno.com/upload/tmp/20361_XYE7Q99SNFCB2B2.png "点击保存提交参数设置")
 
 
 ## 六、网站前台-会员中心-手机-修改输入手机号点发送短信：
 
-![网站前台-会员中心-手机-修改输入手机号点发送短信](http://bbs.xiuno.com/upload/tmp/20361_3X6EFM55NBGMRGK.png "网站前台-会员中心-手机-修改输入手机号点发送短信")
+![网站前台-会员中心-手机-修改输入手机号点发送短信](http://bbs.xiuno.com/upload/tmp/20361_RGUPE9CH7CDYFD8.png "网站前台-会员中心-手机-修改输入手机号点发送短信")
 
 
 ## 七、网站后台-会员管理-会员相关-手机短信-发送记录里面可以查看短信发送记录：
