@@ -16,7 +16,7 @@ https://market.console.aliyun.com/#/bizlist
 
 ## 三、直接帖子附件下载插件解压后上传插件到网站根目录：
 
-![直接帖子附件下载插件解压后上传插件到网站根目录](http://bbs.xiuno.com/upload/tmp/20361_RMS25GZJ2WTZQHB.png "直接帖子附件下载插件解压后上传插件到网站根目录")
+![直接帖子附件下载插件解压后上传插件到网站根目录](http://bbs.xiuno.com/upload/tmp/20361_XC46F5XA3JQCSTA.png "直接帖子附件下载插件解压后上传插件到网站根目录")
 
 
 ## 四、登陆网站后台系统-系统维护-网站设置-云服务填写阿里云市场AppKey和AppSecret到服务账号和服务密钥里面以及短信签名：
