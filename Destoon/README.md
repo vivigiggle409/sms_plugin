@@ -5,64 +5,62 @@ DESTOON B2B网站管理系统是一套基于PHP+MySQL的开源B2B电子商务行
 ## 一、购买阿里云市场短信接口：
 https://market.aliyun.com/products/57126001/cmapi030182.html
 
-![购买阿里云市场短信接口](http://bbs.xiuno.com/upload/attach/201809/20361_J7MEDEQKMZHU2HU.png "购买阿里云市场短信接口")
+![购买阿里云市场短信接口](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/01.png "购买阿里云市场短信接口")
 
 
 ## 二、登录阿里云控制台-云市场-已购买的服务获取AppKey和AppSecret点复制：
 https://market.console.aliyun.com/#/bizlist
 
-![登录阿里云控制台-云市场-已购买的服务获取AppCode点复制](http://bbs.xiuno.com/upload/attach/201809/20361_4F7ZE8BJN9XF3MT.png "登录阿里云控制台-云市场-已购买的服务获取AppCode点复制")
+![登录阿里云控制台-云市场-已购买的服务获取AppCode点复制](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/02.png "登录阿里云控制台-云市场-已购买的服务获取AppCode点复制")
 
 
 ## 三、直接帖子附件下载插件解压后上传插件到网站根目录：
 
-![直接帖子附件下载插件解压后上传插件到网站根目录](http://bbs.xiuno.com/upload/tmp/20361_XC46F5XA3JQCSTA.png "直接帖子附件下载插件解压后上传插件到网站根目录")
+![直接帖子附件下载插件解压后上传插件到网站根目录](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/03.png "直接帖子附件下载插件解压后上传插件到网站根目录")
 
 
 ## 四、登陆网站后台系统-系统维护-网站设置-云服务填写阿里云市场AppKey和AppSecret到服务账号和服务密钥里面以及短信签名：
 
 
-![登陆网站后台系统-系统维护-网站设置-云服务填写阿里云市场AppKey和AppSecret到服务账号和服务密钥里面以及短信签名](http://bbs.xiuno.com/upload/tmp/20361_5RRZR54EXCYQFUQ.png "登陆网站后台系统-系统维护-网站设置-云服务填写阿里云市场AppKey和AppSecret到服务账号和服务密钥里面以及短信签名")
+![登陆网站后台系统-系统维护-网站设置-云服务填写阿里云市场AppKey和AppSecret到服务账号和服务密钥里面以及短信签名](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/04.png "登陆网站后台系统-系统维护-网站设置-云服务填写阿里云市场AppKey和AppSecret到服务账号和服务密钥里面以及短信签名")
 
 
 ## 五、点击保存提交参数设置：
 
-![点击保存提交参数设置](http://bbs.xiuno.com/upload/tmp/20361_XYE7Q99SNFCB2B2.png "点击保存提交参数设置")
+![点击保存提交参数设置](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/05.png "点击保存提交参数设置")
 
 
 ## 六、网站前台-会员中心-手机-修改输入手机号点发送短信：
 
-![网站前台-会员中心-手机-修改输入手机号点发送短信](http://bbs.xiuno.com/upload/tmp/20361_RGUPE9CH7CDYFD8.png "网站前台-会员中心-手机-修改输入手机号点发送短信")
+![网站前台-会员中心-手机-修改输入手机号点发送短信](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/06.png "网站前台-会员中心-手机-修改输入手机号点发送短信")
 
 
 ## 七、网站后台-会员管理-会员相关-手机短信-发送记录里面可以查看短信发送记录：
 
-![网站后台-会员管理-会员相关-手机短信-发送记录里面可以查看短信发送记录](http://bbs.xiuno.com/upload/tmp/20361_J43ED98HXTEJXCU.png "网站后台-会员管理-会员相关-手机短信-发送记录里面可以查看短信发送记录")
+![网站后台-会员管理-会员相关-手机短信-发送记录里面可以查看短信发送记录](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/07.png "网站后台-会员管理-会员相关-手机短信-发送记录里面可以查看短信发送记录")
 
 
 ## 八、网站后台-系统维护-模块管理-会员-设置-新用户注册验证选择短信验证：
 
-![网站后台-系统维护-模块管理-会员-设置-新用户注册验证选择短信验证](http://bbs.xiuno.com/upload/tmp/20361_RQ3ZZ7EKXA5PVSC.png "网站后台-系统维护-模块管理-会员-设置-新用户注册验证选择短信验证")
+![网站后台-系统维护-模块管理-会员-设置-新用户注册验证选择短信验证](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/08.png "网站后台-系统维护-模块管理-会员-设置-新用户注册验证选择短信验证")
 
 
 ## 九、网站前台注册页面输入手机号点发送短信：
 
-![网站前台注册页面输入手机号点发送短信](http://bbs.xiuno.com/upload/tmp/20361_MMBF4Y56AXGU35T.png "网站前台注册页面输入手机号点发送短信")
-
-![提示 400 短信模板未报备](http://bbs.xiuno.com/upload/tmp/20361_HS7768R3UESFE34.png "提示400 短信模板未报备")
+![网站前台注册页面输入手机号点发送短信](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/09.png "网站前台注册页面输入手机号点发送短信")
 
 
 ## 十、如果需要正式使用请先到自助模板报备地址报备模板：
 自助模板报备地址：https://api.chanyoo.net/aliyun/template.html
 
-![如果需要正式使用请先到自助模板报备地址报备模板](http://bbs.xiuno.com/upload/tmp/20361_8GTF4ZPX5ECH57M.png "如果需要正式使用请先到自助模板报备地址报备模板")
+![如果需要正式使用请先到自助模板报备地址报备模板](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/10.png "如果需要正式使用请先到自助模板报备地址报备模板")
 
 
 ## 十一、收到注册短信验证码后输入点下一步完成注册：
 
-![收到注册短信验证码后输入点下一步完成注册](http://bbs.xiuno.com/upload/tmp/20361_MM39PT3TSN99NCA.png "收到注册短信验证码后输入点下一步完成注册")
+![收到注册短信验证码后输入点下一步完成注册](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/12.png "收到注册短信验证码后输入点下一步完成注册")
 
-![收到注册短信验证码后输入点下一步完成注册](http://bbs.xiuno.com/upload/tmp/20361_W4JJ3MHGSNV4NWF.png "收到注册短信验证码后输入点下一步完成注册")
+![收到注册短信验证码后输入点下一步完成注册](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/13.png "收到注册短信验证码后输入点下一步完成注册")
 
 
 ## 十二、至此整个流程完毕，如果需要可以自行下载安装测试。
