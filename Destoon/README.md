@@ -58,9 +58,7 @@ https://market.console.aliyun.com/#/bizlist
 
 ## 十一、收到注册短信验证码后输入点下一步完成注册：
 
-![收到注册短信验证码后输入点下一步完成注册](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/12.png "收到注册短信验证码后输入点下一步完成注册")
-
-![收到注册短信验证码后输入点下一步完成注册](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/13.png "收到注册短信验证码后输入点下一步完成注册")
+![收到注册短信验证码后输入点下一步完成注册](https://github.com/320266360/sms_plugin/blob/master/Destoon/images/11.png "收到注册短信验证码后输入点下一步完成注册")
 
 
 ## 十二、至此整个流程完毕，如果需要可以自行下载安装测试。
