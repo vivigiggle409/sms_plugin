@@ -309,7 +309,7 @@ function send_sms($mobile, $message, $word = 0, $time = 0) {
 
 		$appKey = DT_CLOUD_UID;
 		$appSecret = DT_CLOUD_KEY;
-		$host = "https://aliyun.chanyoo.net";
+		$host = "https://chanyoo.market.alicloudapi.com";
 
 		//域名后、query前的部分
 		$path = "/sendsms";

@@ -73,7 +73,7 @@ class chanyoo_sms{
 
 			$appKey = $this->setting['appkey'];
 			$appSecret = $this->setting['secretKey'];
-			$host = "https://aliyun.chanyoo.net";
+			$host = "https://chanyoo.market.alicloudapi.com";
 
 			//域名后、query前的部分
 			$path = "/sendsms";

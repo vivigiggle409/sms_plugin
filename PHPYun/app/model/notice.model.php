@@ -153,7 +153,7 @@ class notice_model extends model{
 
 		$appKey = $data['uid'];
 		$appSecret = $data['pwd'];
-		$host = "https://aliyun.chanyoo.net";
+		$host = "https://chanyoo.market.alicloudapi.com";
 
 		//域名后、query前的部分
 		$path = "/sendsms";

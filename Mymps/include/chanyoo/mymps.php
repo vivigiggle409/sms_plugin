@@ -25,7 +25,7 @@ function msend_sms($sms_user, $sms_pwd, $mobile, $content)
 
 		$appKey = $sms_user;
 		$appSecret = $sms_pwd;
-		$host = "https://aliyun.chanyoo.net";
+		$host = "https://chanyoo.market.alicloudapi.com";
 
 		$content = $charset == 'gbk' ? iconv('GBK', 'UTF-8//IGNORE', $content) : $content;
 

@@ -14,7 +14,7 @@ function sms_send_code($tomobile, $code) {
 
 	$appKey = $kv['alimarket_api_appkey'];
 	$appSecret = $kv['alimarket_api_appsecret'];
-	$host = "https://aliyun.chanyoo.net";
+	$host = "https://chanyoo.market.alicloudapi.com";
 
 	//域名后、query前的部分
 	$path = "/sendsms";

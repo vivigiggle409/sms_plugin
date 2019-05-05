@@ -200,7 +200,7 @@ function sendsms($user, $pass, $mobile, $content, $checkmobile=true, $refno='', 
 
 				$appKey = $_G['cache']['plugin']['smstong']['appkey'];
 				$appSecret = $_G['cache']['plugin']['smstong']['appsecret'];
-				$host = "https://aliyun.chanyoo.net";
+				$host = "https://chanyoo.market.alicloudapi.com";
 
 				//域名后、query前的部分
 				$path = "/sendsms";
